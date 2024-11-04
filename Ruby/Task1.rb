@@ -1,7 +1,6 @@
 require 'date'
 
 class Student
- 
   @@students = []
 
   attr_reader :surname, :name, :date_of_birth
@@ -13,7 +12,6 @@ class Student
 
     raise ArgumentError, "Date of birth must be in the past" if @date_of_birth >= Date.today
 
-    
     add_student
   end
 
@@ -25,7 +23,7 @@ class Student
   end
 
   def add_student
-    if @@students.any? { |student| student.name == @name && student.surname == @surname && student.date_of_birth == @date_of_birth }
+    if @@students.any? { |student| student == self }
       puts "Student already exists."
     else
       @@students << self
@@ -56,15 +54,14 @@ class Student
     @@students
   end
 
+  def ==(other)
+    other.is_a?(Student) &&
+      @surname == other.surname &&
+      @name == other.name &&
+      @date_of_birth == other.date_of_birth
+  end
+
   def to_s
     "#{@surname} #{@name} (DOB: #{@date_of_birth})"
   end
 end
-
-
-student1 = Student.new("Doe", "John", "2000-05-15")
-student2 = Student.new("Smith", "Jane", "2002-08-22")
-puts Student.all_students
-Student.remove_student("Doe", "John", "2000-05-15")
-puts Student.get_students_by_age(22)
-puts Student.get_students_by_name("Jane")
